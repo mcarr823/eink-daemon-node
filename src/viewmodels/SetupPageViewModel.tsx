@@ -1,3 +1,5 @@
+import IConfig from "@/interfaces/IConfig"
+import { INextResponseSuccess } from "@/network/NextResponseSuccess"
 import { useEffect, useState } from "react"
 
 /**
@@ -22,6 +24,7 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
     const [panel, setPanel] = useState(IT8951Panel)
     const [panels, setPanels] = useState<Array<string>>([])
     const [saving, setSaving] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(true)
 
     // Whenever the panels variable changes, reset the panel
     // variable to whatever the first option is.
@@ -37,6 +40,20 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
         else
             setPanels(gpioPanels)
     }, [driver])
+
+    // When the viewmodel first loads, fetch the config from the server
+    useEffect(() => {
+        if (loading){
+            fetch('/api/config')
+                .then((res) => res.json())
+                .then((res: INextResponseSuccess) => {
+                    const data = res.data as IConfig
+                    setDriver(data.driver)
+                    setPanel(data.panel)
+                    setLoading(false)
+                })
+        }
+    }, [loading])
 
     // Function for saving the user's configs to disk
     const save = () => {
