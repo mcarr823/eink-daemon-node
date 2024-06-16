@@ -19,11 +19,21 @@ export default function SetupPage(){
         <form>
             <div className="mb-3">
                 <label htmlFor="driver" className="form-label">Connection Type</label>
-                <SimpleSelect id="driver" values={model.drivers} setValue={model.setDriver}/>
+                <SimpleSelect
+                    id="driver"
+                    values={model.drivers}
+                    value={model.driver}
+                    setValue={model.setDriver}
+                    />
             </div>
             <div className="mb-3">
                 <label htmlFor="panel" className="form-label">Panel</label>
-                <SimpleSelect id="panel" values={model.panels} setValue={model.setPanel}/>
+                <SimpleSelect
+                    id="panel"
+                    values={model.panels}
+                    value={model.panel}
+                    setValue={model.setPanel}
+                    />
             </div>
             <SubmitButton
                 classes="btn btn-success"

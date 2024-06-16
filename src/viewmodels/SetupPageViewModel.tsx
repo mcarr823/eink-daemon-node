@@ -66,7 +66,7 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
         drivers,
         panels,
         driver, setDriver,
-        setPanel,
+        panel, setPanel,
         saving, save
     }
 
@@ -77,6 +77,7 @@ interface ISetupPageViewModel{
     panels: Array<string>;
     driver: string;
     setDriver: (value: string) => void;
+    panel: string;
     setPanel: (value: string) => void;
     saving: boolean;
     save: () => void;
