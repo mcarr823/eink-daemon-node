@@ -1,3 +1,10 @@
+/**
+ * Default website screen.
+ * 
+ * Explains the purpose of this tool.
+ * 
+ * @returns About screen
+ */
 export default function About() {
   return (
     <div>
