@@ -12,10 +12,15 @@ import SimpleOption from "./SimpleOption";
  * const [selectedValue, setSelectedValue] = useState("")
  * const values = ["value1", "value2"]
  * return (
- *  <SimpleSelect id="test" values={values} setValue={setSelectedValue}/>
+ *  <SimpleSelect
+ *   id="test"
+ *   value={selectedValue}
+ *   values={values}
+ *   setValue={setSelectedValue}/>
  * )
  * 
  * @param id Unique identifier for this element
+ * @param value Default value to display. Can be a state variable from useState
  * @param values Array of strings to display as options in the dropdown list
  * @param setValue Callback to invoke when an option is selected
  * @returns A styled <select> node built from a string array
@@ -32,6 +37,7 @@ export default function SimpleSelect(args: ISimpleSelectArgs){
         <select
             className="form-control"
             id={args.id}
+            value={args.value}
             onChange={setValue}
             >
             {children}
@@ -41,6 +47,7 @@ export default function SimpleSelect(args: ISimpleSelectArgs){
 
 interface ISimpleSelectArgs{
     id: string;
+    value: string;
     values: Array<string>;
     setValue: (value: string) => void;
 }
