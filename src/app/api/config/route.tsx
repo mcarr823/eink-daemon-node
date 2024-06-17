@@ -9,7 +9,12 @@ export const configFile = process.cwd()+"/data/config.json"
 export const dynamic = 'force-dynamic' // defaults to auto
 
 export async function GET(_: NextRequest) {
-    var config: IConfig = { driver: "", panel: "" }
+    var config: IConfig = {
+        driver: "",
+        panel: "",
+        host: "",
+        port: 0
+    }
     try{
         const data = fs.readFileSync(configFile)
         const json = JSON.parse(data.toString())

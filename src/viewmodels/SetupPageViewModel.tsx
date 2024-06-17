@@ -17,13 +17,15 @@ import { useEffect, useState } from "react"
  */
 export default function SetupPageViewModel() : ISetupPageViewModel{
 
-    const drivers = [Drivers.USB, Drivers.GPIO]
+    const drivers = [Drivers.USB, Drivers.GPIO, Drivers.REMOTE]
     const usbPanels = [UsbPanels.IT8951]
     const gpioPanels = [GpioPanels.UNSUPPORTED]
     const remotePanels = [RemotePanels.UNSUPPORTED]
 
     const [driver, setDriver] = useState<string>(Drivers.USB.toString())
     const [panel, setPanel] = useState(UsbPanels.IT8951.toString())
+    const [host, setHost] = useState("")
+    const [port, setPort] = useState(0)
     const [panels, setPanels] = useState<Array<string>>([])
     const [saving, setSaving] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(true)
@@ -54,6 +56,8 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
                     const data = res.data as IConfig
                     setDriver(data.driver)
                     setPanel(data.panel)
+                    setHost(data.host)
+                    setPort(data.port)
                     setLoading(false)
                 })
         }
@@ -62,14 +66,18 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
     // Function for saving the user's configs to disk
     const save = (callback: (data: JSON) => void) => {
         setSaving(true)
+        const config: IConfig = {
+            panel,
+            driver,
+            host,
+            port
+        }
         fetch('/api/config', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-              panel, driver
-            }),
+            body: JSON.stringify(config),
         })
             .then((res) => res.json())
             .then((data: JSON) => {
@@ -83,6 +91,8 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
         panels,
         driver, setDriver,
         panel, setPanel,
+        host, setHost,
+        port, setPort,
         saving, save
     }
 
@@ -95,6 +105,10 @@ interface ISetupPageViewModel{
     setDriver: (value: string) => void;
     panel: string;
     setPanel: (value: string) => void;
+    host: string;
+    setHost: (value: string) => void;
+    port: number;
+    setPort: (value: number) => void;
     saving: boolean;
     save: (callback: (data: JSON) => void) => void;
 }
