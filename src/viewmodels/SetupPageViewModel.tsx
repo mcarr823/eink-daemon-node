@@ -1,3 +1,6 @@
+import { Drivers } from "@/enums/Drivers"
+import { GpioPanels } from "@/enums/GpioPanels"
+import { UsbPanels } from "@/enums/UsbPanels"
 import IConfig from "@/interfaces/IConfig"
 import { INextResponseSuccess } from "@/network/NextResponseSuccess"
 import { useEffect, useState } from "react"
@@ -13,15 +16,12 @@ import { useEffect, useState } from "react"
  */
 export default function SetupPageViewModel() : ISetupPageViewModel{
 
-    const usbDriver = "USB"
-    const gpioDriver = "GPIO"
-    const drivers = [usbDriver, gpioDriver]
-    const IT8951Panel = "IT8951"
-    const usbPanels = [IT8951Panel]
-    const gpioPanels = ['Not yet supported']
+    const drivers = [Drivers.USB, Drivers.GPIO]
+    const usbPanels = [UsbPanels.IT8951]
+    const gpioPanels = [GpioPanels.UNSUPPORTED]
 
-    const [driver, setDriver] = useState(usbDriver)
-    const [panel, setPanel] = useState(IT8951Panel)
+    const [driver, setDriver] = useState<string>(Drivers.USB.toString())
+    const [panel, setPanel] = useState(UsbPanels.IT8951.toString())
     const [panels, setPanels] = useState<Array<string>>([])
     const [saving, setSaving] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(true)
@@ -35,7 +35,7 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
     // When the user selects a driver, change the available
     // panels to match the driver selection.
     useEffect(() => {
-        if (driver === usbDriver)
+        if (driver === Drivers.USB.toString())
             setPanels(usbPanels)
         else
             setPanels(gpioPanels)
