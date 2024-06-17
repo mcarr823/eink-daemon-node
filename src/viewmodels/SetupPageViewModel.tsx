@@ -56,10 +56,22 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
     }, [loading])
 
     // Function for saving the user's configs to disk
-    const save = () => {
+    const save = (callback: (data: JSON) => void) => {
         setSaving(true)
-        //TODO perform ajax request
-        setSaving(false)
+        fetch('/api/config', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              panel, driver
+            }),
+        })
+            .then((res) => res.json())
+            .then((data: JSON) => {
+                setSaving(false)
+                callback(data)
+            })
     }
 
     return {
@@ -80,5 +92,5 @@ interface ISetupPageViewModel{
     panel: string;
     setPanel: (value: string) => void;
     saving: boolean;
-    save: () => void;
+    save: (callback: (data: JSON) => void) => void;
 }
