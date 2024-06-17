@@ -17,7 +17,7 @@ export default function NextResponseError(
     return NextResponse.json(json, { status: statusCode })
 }
 
-interface INextResponseError{
+export interface INextResponseError{
     success: boolean;
     error: string;
 }
