@@ -2,6 +2,8 @@
 import SetupPageViewModel from '@/viewmodels/SetupPageViewModel';
 import SimpleSelect from '../components/SimpleSelect';
 import SubmitButton from '../components/SubmitButton';
+import Toast from '../components/Toast';
+import ToastViewModel from '@/viewmodels/ToastViewModel';
 
 /**
  * Daemon setup screen.
@@ -14,6 +16,18 @@ import SubmitButton from '../components/SubmitButton';
 export default function SetupPage(){
 
     const model = SetupPageViewModel()
+    const toast = ToastViewModel()
+
+    const save = () => {
+        model.save((data: JSON) => {
+            if ('error' in data){
+                const error = data.error as string
+                toast.error(error)
+            }else{
+                toast.success('Config updated successfully')
+            }
+        })
+    }
 
     return (
         <form>
@@ -39,8 +53,9 @@ export default function SetupPage(){
                 classes="btn btn-success"
                 text="Save"
                 enabled={!model.saving}
-                onClick={model.save}
+                onClick={save}
                 />
+            <Toast model={toast}/>
         </form>
     )
 }
