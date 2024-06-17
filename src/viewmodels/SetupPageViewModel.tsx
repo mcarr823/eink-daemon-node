@@ -1,5 +1,6 @@
 import { Drivers } from "@/enums/Drivers"
 import { GpioPanels } from "@/enums/GpioPanels"
+import { RemotePanels } from "@/enums/RemotePanels"
 import { UsbPanels } from "@/enums/UsbPanels"
 import IConfig from "@/interfaces/IConfig"
 import { INextResponseSuccess } from "@/network/NextResponseSuccess"
@@ -19,6 +20,7 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
     const drivers = [Drivers.USB, Drivers.GPIO]
     const usbPanels = [UsbPanels.IT8951]
     const gpioPanels = [GpioPanels.UNSUPPORTED]
+    const remotePanels = [RemotePanels.UNSUPPORTED]
 
     const [driver, setDriver] = useState<string>(Drivers.USB.toString())
     const [panel, setPanel] = useState(UsbPanels.IT8951.toString())
@@ -37,6 +39,8 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
     useEffect(() => {
         if (driver === Drivers.USB.toString())
             setPanels(usbPanels)
+        else if (driver === Drivers.REMOTE.toString())
+            setPanels(remotePanels)
         else
             setPanels(gpioPanels)
     }, [driver])
