@@ -69,7 +69,7 @@ export default function SetupPage(){
                     id="host"
                     type="text"
                     className="form-control"
-                    value={model.host}
+                    defaultValue={model.host}
                     onChange={setHost}
                     />
             </div>
@@ -79,7 +79,7 @@ export default function SetupPage(){
                     id="port"
                     type="text"
                     className="form-control"
-                    value={model.port}
+                    defaultValue={model.port}
                     onChange={setPort}
                     />
             </div>
