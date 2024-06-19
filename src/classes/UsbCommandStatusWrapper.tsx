@@ -18,16 +18,17 @@ export default class UsbCommandStatusWrapper{
         bigEndian: boolean
     ){
 
-        const sigBytes = bytes.buffer.slice(0,4)
-        this.signature = Buffer.from(sigBytes)
+        if (bytes.length != 13){
+            throw Error("Unexpected buffer length of: ${bytes.length}")
+        }
 
-        const tagBytes = bytes.buffer.slice(4,8)
-        const tagBuffer = Buffer.from(tagBytes)
-        this.tag = bytesToInt(tagBuffer, bigEndian)
+        this.signature = bytes.subarray(0,4)
 
-        const residueBytes = bytes.buffer.slice(8,12)
-        const residueBuffer = Buffer.from(residueBytes)
-        this.dataResidue = bytesToInt(residueBuffer, bigEndian)
+        const tagBytes = bytes.subarray(4,8)
+        this.tag = bytesToInt(tagBytes, bigEndian)
+
+        const residueBytes = bytes.subarray(8,12)
+        this.dataResidue = bytesToInt(residueBytes, bigEndian)
 
         this.status = bytes[12]
     }
