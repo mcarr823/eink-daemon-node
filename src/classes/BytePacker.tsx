@@ -1,3 +1,5 @@
+import { Uint8 } from "./IntConverter";
+
 /**
  * Class for packing raw image bytes into a compressed stream.
  * 
@@ -41,10 +43,10 @@
  */
 export default class BytePacker{
 
-    packed_buffer: Array<number>;
+    packed_buffer: Buffer;
 
     constructor(){
-        this.packed_buffer = []
+        this.packed_buffer = Buffer.alloc(0)
     }
 
     /**
@@ -55,7 +57,7 @@ export default class BytePacker{
      */
     pack(
         bpp: number,
-        frame_buffer: Array<number>,
+        frame_buffer: Buffer,
         flipWord: boolean
     ){
 
@@ -78,16 +80,13 @@ export default class BytePacker{
         // Set the size of packed_buffer to be the length of the
         // frame buffer (total input bytes) divided by a halfstep
         // (input bytes needed per packed byte).
-        const len = frame_buffer.length / halfstep
-        this.packed_buffer = Array<number>(frame_buffer.length / halfstep)
+        const len = frame_buffer.byteLength / halfstep
+        this.packed_buffer = Buffer.alloc(len)
         console.log("Buffer len: "+len)
 
         // Select the packing function based on which bpp
         // mode we're using.
-        const packfn: (
-            i: number,
-            bytes: Array<number>
-        ) => void =
+        const packfn: (bytes: Buffer) => Buffer =
             (bpp == 1) ?
                 this.pack_1bpp :
             (bpp == 2) ?
@@ -98,11 +97,20 @@ export default class BytePacker{
 
         // Step through the frame buffer and pack its bytes
         // into packed_buffer.
+        var index = 0
         for (var i = 0; i < frame_buffer.length; i += step){
-            const byte1 = frame_buffer.slice(i, i+halfstep)
-            const byte2 = frame_buffer.slice(i+halfstep, i+step)
-            const bytes = flipWord ? [...byte2, ...byte1] : [...byte1, ...byte2]
-            packfn(i / halfstep, bytes)
+            const bytes1 = frame_buffer.subarray(i, i+halfstep)
+            const bytes2 = frame_buffer.subarray(i+halfstep, i+step)
+            const pack1 = packfn(bytes1)
+            const pack2 = packfn(bytes2)
+            if (flipWord){
+                this.packed_buffer.set(pack2, index)
+                this.packed_buffer.set(pack1, index+1)
+            }else{
+                this.packed_buffer.set(pack1, index)
+                this.packed_buffer.set(pack2, index+1)
+            }
+            index += 2
         }
 
         return this.packed_buffer
@@ -110,27 +118,16 @@ export default class BytePacker{
     }
 
     /**
-     * @param i Index
      * @param bytes Bytes to pack
      */
     pack_1bpp(
-        i: number,
-        bytes: Array<number>
-    ){
+        bytes: Buffer
+    ): Buffer{
         // Note that these bitwise operators are
         // used intentionally for speed.
         // It's ugly code, but it's fast, which is
         // important for byte packing.
-        this.packed_buffer[i] =
-            (bytes[8] ? 1 : 0) |
-            (bytes[9] ? 2 : 0) |
-            (bytes[10] ? 4 : 0) |
-            (bytes[11] ? 8 : 0) |
-            (bytes[12] ? 16 : 0) |
-            (bytes[13] ? 32 : 0) |
-            (bytes[14] ? 64 : 0) |
-            (bytes[15] ? 128 : 0)
-        this.packed_buffer[i+1] =
+        return Uint8(
             (bytes[0] ? 1 : 0) |
             (bytes[1] ? 2 : 0) |
             (bytes[2] ? 4 : 0) |
@@ -139,42 +136,33 @@ export default class BytePacker{
             (bytes[5] ? 32 : 0) |
             (bytes[6] ? 64 : 0) |
             (bytes[7] ? 128 : 0)
+        )
     }
 
     /**
-     * @param i Index
      * @param bytes Bytes to pack
      */
     pack_2bpp(
-        i: number,
-        bytes: Array<number>
-    ){
-        this.packed_buffer[i] =
-            (bytes[4] ? 3 : 0) |
-            (bytes[5] ? 12 : 0) |
-            (bytes[6] ? 48 : 0) |
-            (bytes[7] ? 192 : 0)
-        this.packed_buffer[i+1] =
+        bytes: Buffer
+    ): Buffer{
+        return Uint8(
             (bytes[0] ? 3 : 0) |
             (bytes[1] ? 12 : 0) |
             (bytes[2] ? 48 : 0) |
             (bytes[3] ? 192 : 0)
+        )
     }
     
     /**
-     * @param i Index
      * @param bytes Bytes to pack
      */
     pack_4bpp(
-        i: number,
-        bytes: Array<number>
-    ){
-        this.packed_buffer[i] =
-            (bytes[2] ? 15 : 0) |
-            (bytes[3] ? 240 :0)
-        this.packed_buffer[i+1] = 
+        bytes: Buffer
+    ): Buffer{
+        return Uint8(
             (bytes[0] ? 15 : 0) |
             (bytes[1] ? 240 : 0)
+        )
     }
     
     /**
@@ -182,13 +170,11 @@ export default class BytePacker{
      * @param bytes Bytes to pack
      */
     pack_8bpp(
-        i: number,
-        bytes: Array<number>
-    ){
-        this.packed_buffer[i] =
-            (bytes[1] ? 255 : 0)
-        this.packed_buffer[i+1] = 
-            (bytes[0] ? 255 : 0)
+        bytes: Buffer
+    ): Buffer{
+        return Uint8(
+            bytes[0] ? 255 : 0
+        )
     }
 
 }
