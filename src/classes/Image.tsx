@@ -44,10 +44,41 @@ export default class Image{
     /**
      * Returns the underlying bitmap as a Buffer object.
      * 
-     * @returns Buffer of the image's byte data
+     * @returns Buffer of the image's byte data in 32bpp
      */
-    asBuffer(): Buffer {
+    asBufferColor(): Buffer {
+        this.img.data
         return Buffer.from(this.img.data)
+    }
+
+    /**
+     * Converts the image to grayscale, then returns the
+     * resulting bitmap as a Buffer object.
+     * 
+     * @returns Buffer of the image's byte data in 8bpp
+     */
+    asBufferGrayscale(): Buffer {
+        
+        const width = this.img.width
+        const height = this.img.height
+        const output = Buffer.alloc(width * height)
+
+        // Loop through each pixel and convert it from color (32bpp)
+        // to grayscale (8bpp)
+        for (var y = 0; y < height; y += 1){
+            for (var x = 0; x < width; x += 1){
+                const rgba = this.img.getPixelRGBA_separate(x, y)
+                const red = rgba[0] * 0.299
+                const green = rgba[1] * 0.587
+                const blue = rgba[2] * 0.114
+                const alpha = rgba[3] / 255.0
+                const index = y * height + x
+                output[index] = alpha * (red + green + blue)
+            }
+        }
+        
+        return output
+
     }
     
 }
