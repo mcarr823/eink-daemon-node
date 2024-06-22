@@ -1,18 +1,27 @@
 import UsbCommandBlockWrapper from "@/classes/UsbCommandBlockWrapper";
-import { Uint8, bytesToInt, intToBytes, shortToBytes } from "@/classes/IntConverter";
+import { Uint8 } from "@/classes/IntConverter";
 import UsbCommandStatusWrapper from "@/classes/UsbCommandStatusWrapper";
 import IUsbDriver from "@/interfaces/IUsbDriver";
+import { BitsPerPixel } from "@/enums/BitsPerPixel";
 
 export default abstract class AbstractUsbDriver implements IUsbDriver{
 
     // Properties from IUsbDriver
     abstract vendorId: string;
     abstract productId: string;
+    abstract bpp: BitsPerPixel;
+    abstract base_address: number;
+    abstract width: number;
+    abstract height: number;
 
     // Functions from IUsbDriver
     abstract read_register(address: number, length: number): Buffer;
     abstract write_register(address: number, data: Buffer): void;
     abstract write_register_fast(address: number, data: Buffer): void;
+    abstract init(): void;
+    abstract waitUntilPanelReady(): void;
+    abstract draw(x: number, y: number, image: Buffer): void;
+    abstract clear(): void;
 
     // Usb driver properties
     tag_num: number = 0;
