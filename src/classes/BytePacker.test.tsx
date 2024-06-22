@@ -2,15 +2,17 @@
  * @jest-environment node
  */
 
+import { BitsPerPixel } from '@/enums/BitsPerPixel';
 import BytePacker from './BytePacker';
 import {expect, test} from '@jest/globals';
 
 const packer = new BytePacker()
 
 test("1bpp pack", () => {
+    const bpp = BitsPerPixel.BPP1
     const input = Buffer.from([0, 0, 0, 0, 0, 0, 0, 0, 20, 30, 50, 80, 100, 100, 100, 100])
-    const output = packer.pack(1, input, false)
-    const outputWordFlip = packer.pack(1, input, true)
+    const output = packer.pack(bpp, input, false)
+    const outputWordFlip = packer.pack(bpp, input, true)
 
     expect(output.length).toBe(2)
     expect(output.byteLength).toBe(2)
@@ -24,9 +26,10 @@ test("1bpp pack", () => {
 })
 
 test("2bpp pack", () => {
+    const bpp = BitsPerPixel.BPP2
     const input = Buffer.from([0, 0, 0, 0, 20, 30, 50, 80, 0, 0, 0, 0, 100, 100, 100, 100])
-    const output = packer.pack(2, input, false)
-    const outputWordFlip = packer.pack(2, input, true)
+    const output = packer.pack(bpp, input, false)
+    const outputWordFlip = packer.pack(bpp, input, true)
 
     expect(output.length).toBe(4)
     expect(output.byteLength).toBe(4)
@@ -44,9 +47,10 @@ test("2bpp pack", () => {
 })
 
 test("4bpp pack", () => {
+    const bpp = BitsPerPixel.BPP4
     const input = Buffer.from([0, 0, 20, 30, 0, 0, 50, 80, 0, 0, 100, 100, 0, 0, 100, 100])
-    const output = packer.pack(4, input, false)
-    const outputWordFlip = packer.pack(4, input, true)
+    const output = packer.pack(bpp, input, false)
+    const outputWordFlip = packer.pack(bpp, input, true)
 
     expect(output.length).toBe(8)
     expect(output.byteLength).toBe(8)
@@ -72,9 +76,10 @@ test("4bpp pack", () => {
 })
 
 test("8bpp pack", () => {
+    const bpp = BitsPerPixel.BPP8
     const input = Buffer.from([0, 20, 0, 30, 0, 50, 0, 80, 0, 100, 0, 100, 0, 100, 0, 100])
-    const output = packer.pack(8, input, false)
-    const outputWordFlip = packer.pack(8, input, true)
+    const output = packer.pack(bpp, input, false)
+    const outputWordFlip = packer.pack(bpp, input, true)
 
     expect(output.length).toBe(16)
     expect(output.byteLength).toBe(16)

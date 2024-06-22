@@ -1,3 +1,4 @@
+import { BitsPerPixel } from "@/enums/BitsPerPixel";
 import { Uint8 } from "./IntConverter";
 
 /**
@@ -56,7 +57,7 @@ export default class BytePacker{
      * order. So instead of writing 010100, we would write 101000
      */
     pack(
-        bpp: number,
+        bpp: BitsPerPixel,
         frame_buffer: Buffer,
         flipWord: boolean
     ){
@@ -82,7 +83,7 @@ export default class BytePacker{
         // (input bytes needed per packed byte).
         const len = frame_buffer.byteLength / halfstep
         this.packed_buffer = Buffer.alloc(len)
-        console.log("Buffer len: "+len)
+        // console.log("Buffer len: "+len)
 
         // Select the packing function based on which bpp
         // mode we're using.
