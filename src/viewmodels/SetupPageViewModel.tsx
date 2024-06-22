@@ -1,6 +1,5 @@
 import { Drivers } from "@/enums/Drivers"
 import { GpioPanels } from "@/enums/GpioPanels"
-import { RemotePanels } from "@/enums/RemotePanels"
 import { UsbPanels } from "@/enums/UsbPanels"
 import IConfig from "@/interfaces/IConfig"
 import { INextResponseSuccess } from "@/network/NextResponseSuccess"
@@ -17,13 +16,13 @@ import { useEffect, useState } from "react"
  */
 export default function SetupPageViewModel() : ISetupPageViewModel{
 
-    const drivers = [Drivers.USB, Drivers.GPIO, Drivers.REMOTE]
+    const drivers = [Drivers.USB, Drivers.GPIO]
     const usbPanels = [UsbPanels.IT8951]
     const gpioPanels = [GpioPanels.UNSUPPORTED]
-    const remotePanels = [RemotePanels.UNSUPPORTED]
 
     const [driver, setDriver] = useState<string>(Drivers.USB.toString())
     const [panel, setPanel] = useState(UsbPanels.IT8951.toString())
+    const [remote, setRemote] = useState<boolean>(false)
     const [host, setHost] = useState("")
     const [port, setPort] = useState(0)
     const [panels, setPanels] = useState<Array<string>>([])
@@ -41,8 +40,6 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
     useEffect(() => {
         if (driver === Drivers.USB.toString())
             setPanels(usbPanels)
-        else if (driver === Drivers.REMOTE.toString())
-            setPanels(remotePanels)
         else
             setPanels(gpioPanels)
     }, [driver])
@@ -56,6 +53,7 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
                     const data = res.data as IConfig
                     setDriver(data.driver)
                     setPanel(data.panel)
+                    setRemote(data.remote)
                     setHost(data.host)
                     setPort(data.port)
                     setLoading(false)
@@ -69,6 +67,7 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
         const config: IConfig = {
             panel,
             driver,
+            remote,
             host,
             port
         }
@@ -91,6 +90,7 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
         panels,
         driver, setDriver,
         panel, setPanel,
+        remote, setRemote,
         host, setHost,
         port, setPort,
         saving, save
@@ -105,6 +105,8 @@ interface ISetupPageViewModel{
     setDriver: (value: string) => void;
     panel: string;
     setPanel: (value: string) => void;
+    remote: boolean;
+    setRemote: (value: boolean) => void;
     host: string;
     setHost: (value: string) => void;
     port: number;

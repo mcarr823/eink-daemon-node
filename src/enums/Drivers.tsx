@@ -4,6 +4,5 @@
  */
 export enum Drivers{
     USB = "USB",
-    GPIO = "GPIO",
-    REMOTE = "REMOTE"
+    GPIO = "GPIO"
 }

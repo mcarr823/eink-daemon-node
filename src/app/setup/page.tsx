@@ -5,7 +5,6 @@ import SubmitButton from '../components/SubmitButton';
 import Toast from '../components/Toast';
 import ToastViewModel from '@/viewmodels/ToastViewModel';
 import { ChangeEventHandler } from 'react';
-import { Drivers } from '@/enums/Drivers';
 
 /**
  * Daemon setup screen.
@@ -20,8 +19,8 @@ export default function SetupPage(){
     const model = SetupPageViewModel()
     const toast = ToastViewModel()
 
-    // Only show the host and port if the driver type is REMOTE
-    const hostAndPortStyles = model.driver === Drivers.REMOTE.toString() ? {} : {display:'none'}
+    // Only show the host and port if `remote` is ticked
+    const hostAndPortStyles = model.remote ? {} : {display:'none'}
 
     const save = () => {
         model.save((data: JSON) => {
@@ -43,6 +42,11 @@ export default function SetupPage(){
         model.setPort(value)
     }
 
+    const setRemote: ChangeEventHandler<HTMLInputElement> = (event) => {
+        const value = event.target.checked;
+        model.setRemote(value)
+    }
+
     return (
         <form>
             <div className="mb-3">
@@ -61,6 +65,16 @@ export default function SetupPage(){
                     values={model.panels}
                     value={model.panel}
                     setValue={model.setPanel}
+                    />
+            </div>
+            <div className="mb-3 form-check">
+                <label htmlFor="remote" className="form-check-label">Remote</label>
+                <input
+                    id="remote"
+                    type="checkbox"
+                    className="form-check-input"
+                    checked={model.remote}
+                    onChange={setRemote}
                     />
             </div>
             <div className="mb-3" style={hostAndPortStyles}>
@@ -84,7 +98,7 @@ export default function SetupPage(){
                     />
             </div>
             <SubmitButton
-                classes="btn btn-success"
+                classes="btn btn-success mt-3"
                 text="Save"
                 enabled={!model.saving}
                 onClick={save}

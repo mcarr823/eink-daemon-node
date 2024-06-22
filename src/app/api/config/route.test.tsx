@@ -45,6 +45,7 @@ test('PUT /api/config', async () => {
     const config: IConfig = {
         panel:'test',
         driver:'test',
+        remote:false,
         host:'localhost',
         port:1234
     };
@@ -89,7 +90,8 @@ test('PUT and GET /api/config', async () => {
     const panel = "myuniquepanel"
     const host = 'localhost'
     const port = 1234
-    const config: IConfig = { panel, driver, host, port };
+    const remote = false
+    const config: IConfig = { panel, driver, remote, host, port };
     const requestObj = {
         json: async () => (config),
     } as any;
@@ -109,6 +111,7 @@ test('PUT and GET /api/config', async () => {
     expect(body2.success).toBe(true)
     expect(data2.driver).toBe(driver)
     expect(data2.panel).toBe(panel)
+    expect(data2.remote).toBe(remote)
     expect(data2.host).toBe(host)
     expect(data2.port).toBe(port)
 
