@@ -1,4 +1,4 @@
-import PImage, { Bitmap } from "pureimage";
+import { Bitmap, make } from "pureimage";
 
 /**
  * Image based on the pureimage library
@@ -23,7 +23,7 @@ export default class Image{
     ){
 
         // Create the image
-        this.img = PImage.make(width, height)
+        this.img = make(width, height)
 
     }
 
