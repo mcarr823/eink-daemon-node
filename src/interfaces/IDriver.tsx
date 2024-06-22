@@ -7,15 +7,15 @@
 export default interface IDriver{
 
     // Initialize the panel
-    init: () => void;
+    init(): void;
 
     // Wait until the panel is ready for input
-    waitUntilReady: () => void;
+    waitUntilReady(): void;
 
     // Draw an image on the panel
-    draw: (x: number, y: number, image: Buffer) => void;
+    draw(x: number, y: number, image: Buffer): void;
 
     // Clear the panel
-    clear: () => void;
+    clear(): void;
     
 }
