@@ -22,7 +22,7 @@ export default interface IDriver{
     waitUntilPanelReady(): void;
 
     // Draw an image on the panel
-    draw(x: number, y: number, image: Buffer): void;
+    draw(x: number, y: number, image: Buffer, displayModeOverride: number): void;
 
     // Clear the panel
     clear(): void;

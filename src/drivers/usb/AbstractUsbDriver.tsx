@@ -20,7 +20,7 @@ export default abstract class AbstractUsbDriver implements IUsbDriver{
     abstract write_register_fast(address: number, data: Buffer): void;
     abstract init(): void;
     abstract waitUntilPanelReady(): void;
-    abstract draw(x: number, y: number, image: Buffer): void;
+    abstract draw(x: number, y: number, image: Buffer, displayModeOverride: number): void;
     abstract clear(): void;
 
     // Usb driver properties
@@ -126,6 +126,11 @@ export default abstract class AbstractUsbDriver implements IUsbDriver{
 
         return new UsbCommandStatusWrapper(csb_data, true)
 
+    }
+
+    // Wait `millis` milliseconds before continuing
+    async delay_ms(millis: number) {
+        await new Promise(resolve => setTimeout(resolve, millis));
     }
 
     /**
