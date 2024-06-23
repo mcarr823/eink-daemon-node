@@ -91,3 +91,54 @@ test("Canvas fill grayscale", () => {
     const allBlack = blackImage.every(byte => byte == 0)
     expect(allBlack).toBe(true)
 })
+
+
+// Same as the grayscale test, but the image is cropped
+test("Canvas crop grayscale", () => {
+
+    const width = 100
+    const height = 100
+    const cropWidth = 10
+    const cropHeight = 10
+    
+    const img = new Image(width, height)
+    img.fill("#FFF")
+    const whiteImage = img.asBufferGrayscale({
+        x: 0,
+        y: 0,
+        width: cropWidth,
+        height: cropHeight
+    })
+
+    // Expected length is the number of pixels (width x height)
+    // multiplied by the number of bytes per pixel.
+    // In grayscale mode it's 8bpp (1 byte per pixel)
+    const numPixels = cropWidth * cropHeight
+    const bytesPerPixel = 1
+    const expectedBufferLength = numPixels * bytesPerPixel
+
+    expect(whiteImage.length).toBe(expectedBufferLength)
+    expect(whiteImage.byteLength).toBe(expectedBufferLength)
+    
+    // Check bytes one by one to confirm that they're all white
+    const allWhite = whiteImage.every(byte => byte == 255)
+    expect(allWhite).toBe(true)
+
+    // Paint the image black and run the tests again
+    img.fill("#000")
+    const blackImage = img.asBufferGrayscale({
+        x: 0,
+        y: 0,
+        width: cropWidth,
+        height: cropHeight
+    })
+
+    expect(blackImage.length).toBe(expectedBufferLength)
+    expect(blackImage.byteLength).toBe(expectedBufferLength)
+    
+    // Check bytes one by one to confirm that they're all black.
+    // Unlike the other test, we don't need to check every 4th pixel
+    // for a value of 255, since there's no alpha channel.
+    const allBlack = blackImage.every(byte => byte == 0)
+    expect(allBlack).toBe(true)
+})
