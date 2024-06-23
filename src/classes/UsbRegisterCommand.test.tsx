@@ -4,12 +4,14 @@
 
 import {expect, test} from '@jest/globals';
 import UsbRegisterCommand from './UsbRegisterCommand';
+import { shortToBytes } from './IntConverter';
 
 test("UsbRegisterCommand", () => {
+    const lengthBytes = shortToBytes(10, true)
     const buf = UsbRegisterCommand({
         address: 100,
         command: 150,
-        length: 10
+        value: lengthBytes
     })
 
     // Length should always be 16
