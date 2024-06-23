@@ -129,11 +129,6 @@ export default abstract class AbstractUsbDriver extends AbstractDriver implement
 
     }
 
-    // Wait `millis` milliseconds before continuing
-    async delay_ms(millis: number) {
-        await new Promise(resolve => setTimeout(resolve, millis));
-    }
-
     /**
      * Reads a set number of bytes from the socket.
      * 

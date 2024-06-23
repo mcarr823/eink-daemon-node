@@ -49,4 +49,9 @@ export default abstract class AbstractDriver implements IDriver{
 
     }
 
+    // Wait `millis` milliseconds before continuing
+    delay_ms(millis: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, millis));
+    }
+
 }
