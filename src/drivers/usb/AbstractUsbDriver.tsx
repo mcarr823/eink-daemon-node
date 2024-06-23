@@ -133,22 +133,50 @@ export default abstract class AbstractUsbDriver extends AbstractDriver implement
      * Reads a set number of bytes from the socket.
      * 
      * @param length Number of bytes to read from the socket
-     * @return Buffer containing `length` bytes
+     * @returns Buffer of byte data if successfully read
+     * @throws Error if USB read fails
      */
-    read(length: number): Buffer {
-        // TODO
-        throw Error("Not yet implemented")
+    async read(
+        length: number
+    ): Promise<Buffer> {
+
+        const { error, data } = await new Promise((cb: (args: { error: LibUSBException | undefined, data?: Buffer }) => void) => {
+            this.endpoint_in.transfer(length, (error, data) => {
+                cb({ error, data })
+            })
+        })
+
+        if (data)
+            return data
+        else if (error)
+            throw error
+        else
+            throw Error("Failed to read data from USB")
+
     }
 
     /**
      * Writes a buffer filled with bytes to a socket.
      * 
-     * @param byte_list Bytes to write to the socket
-     * @return Number of bytes successfully written to the socket
+     * @param data Bytes to write to the socket
+     * @returns Number of bytes written to the socket
+     * @throws Error if write fails
      */
-    write(byte_list: Buffer): number {
-        // TODO
-        throw Error("Not yet implemented")
+    async write(
+        data: Buffer
+    ): Promise<number> {
+
+        const { error, bytesWritten } = await new Promise((cb: (args: { error: LibUSBException | undefined, bytesWritten: number }) => void) => {
+            this.endpoint_out.transfer(data, (error, bytesWritten) => {
+                cb({ error, bytesWritten })
+            })
+        })
+
+        if (error)
+            throw error
+        else
+            return bytesWritten
+        
     }
 
 
