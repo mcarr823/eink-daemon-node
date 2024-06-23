@@ -4,8 +4,9 @@ import UsbCommandStatusWrapper from "@/classes/UsbCommandStatusWrapper";
 import IUsbDriver from "@/interfaces/IUsbDriver";
 import { BitsPerPixel } from "@/enums/BitsPerPixel";
 import Image from "@/classes/Image";
+import AbstractDriver from "../AbstractDriver";
 
-export default abstract class AbstractUsbDriver implements IUsbDriver{
+export default abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDriver{
 
     // Properties from IUsbDriver
     abstract vendorId: string;
