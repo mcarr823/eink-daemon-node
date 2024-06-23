@@ -12,8 +12,8 @@ export default interface IUsbDriver extends IDriver {
     base_address: number;
 
     // Commands for reading from and writing to the panel registers
-    read_register(address: number, length: number): Buffer
-    write_register(address: number, data: Buffer): void
-    write_register_fast(address: number, data: Buffer): void
+    read_register(address: number, length: number): Promise<Buffer>
+    write_register(address: number, data: Buffer): Promise<void>
+    write_register_fast(address: number, data: Buffer): Promise<void>
 
 }

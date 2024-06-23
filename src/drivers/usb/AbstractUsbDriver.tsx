@@ -88,13 +88,13 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
     abstract height: number;
 
     // Functions from IUsbDriver
-    abstract read_register(address: number, length: number): Buffer;
-    abstract write_register(address: number, data: Buffer): void;
-    abstract write_register_fast(address: number, data: Buffer): void;
-    abstract init(): void;
-    abstract waitUntilPanelReady(): void;
-    abstract draw(x: number, y: number, image: Image, displayModeOverride: number): void;
-    abstract clear(): void;
+    abstract read_register(address: number, length: number): Promise<Buffer>;
+    abstract write_register(address: number, data: Buffer): Promise<void>;
+    abstract write_register_fast(address: number, data: Buffer): Promise<void>;
+    abstract init(): Promise<void>;
+    abstract waitUntilPanelReady(): Promise<void>;
+    abstract draw(x: number, y: number, image: Image, displayModeOverride: number, refreshAfter: boolean): Promise<void>;
+    abstract clear(): Promise<void>;
 
     // Usb driver properties
     tag_num: number = 0;
@@ -116,7 +116,7 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
      * 
      * @returns Tag number
      */
-    get_tag(){
+    get_tag(): number {
         this.tag_num += 1
         return this.tag_num
     }
@@ -152,15 +152,15 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
         })
     }
 
-    read_command(
+    async read_command(
         command: Buffer,
         length: number,
         bigEndian: boolean
-    ){
+    ): Promise<Buffer> {
         
         // issue CBW block
         const cbw_data = this.get_command_block_wrapper(command, length, true, bigEndian)
-        const written = this.write(cbw_data)
+        const written = await this.write(cbw_data)
 
         // print("Command "+str(command))
         // print("Length "+str(length))
@@ -168,44 +168,44 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
         // print("Written "+str(written))
 
         // now read the data
-        const buf = this.read(length)
+        const buf = await this.read(length)
         // print("Received "+str(buf))
 
         // issue CBS block
-        this.send_status_block_wrapper()
+        await this.send_status_block_wrapper()
 
         // transform data into required data
         return buf
     }
 
-    write_command(
+    async write_command(
         command: Buffer,
         value_data: Buffer,
         extra_data: Buffer,
         bigEndian: boolean = false
-    ){
+    ): Promise<void> {
 
         // combine this with any additional data
         const bulk_data = Buffer.concat([value_data, extra_data])
 
         // issue CBW block
         const cbw_data = this.get_command_block_wrapper(command, bulk_data.length, false, bigEndian)
-        this.write(cbw_data)
+        await this.write(cbw_data)
 
         // now write the data for the value
-        this.write(bulk_data)
+        await this.write(bulk_data)
 
         // issue CBS block
-        this.send_status_block_wrapper()
+        await this.send_status_block_wrapper()
     }
 
-    send_status_block_wrapper(): UsbCommandStatusWrapper {
+    async send_status_block_wrapper(): Promise<UsbCommandStatusWrapper> {
 
         // A CSW is exactly 13 bytes
         const length = 13
 
         // Read the CSW byte data from the socket
-        const csb_data = this.read(length)
+        const csb_data = await this.read(length)
 
         return new UsbCommandStatusWrapper(csb_data, true)
 

@@ -17,15 +17,15 @@ export default interface IDriver{
     height: number;
 
     // Initialize the panel
-    init(): void;
+    init(): Promise<void>;
 
     // Wait until the panel is ready for input
-    waitUntilPanelReady(): void;
+    waitUntilPanelReady(): Promise<void>;
 
     // Draw an image on the panel
-    draw(x: number, y: number, image: Image, displayModeOverride: number): void;
+    draw(x: number, y: number, image: Image, displayModeOverride: number, refreshAfter: boolean): Promise<void>;
 
     // Clear the panel
-    clear(): void;
+    clear(): Promise<void>;
     
 }
