@@ -3,7 +3,7 @@
  */
 
 import {expect, test} from '@jest/globals';
-import { Uint8, bytesToInt, bytesToIntArray, intToBytes, shortToBytes } from './IntConverter';
+import { Uint8, bytesToInt, bytesToIntArray, intArrayToBytes, intToBytes, shortToBytes } from './IntConverter';
 
 test("Uint8", () => {
 
@@ -43,6 +43,37 @@ test("intToBytes", () => {
     expect(buf2[1]).toBe(0)
     expect(buf2[2]).toBe(0)
     expect(buf2[3]).toBe(0)
+
+})
+
+test("intArrayToBytes", () => {
+
+    const num = [1, 2]
+    const buf = intArrayToBytes(num, true)
+
+    expect(buf.length).toBe(8)
+    expect(buf.byteLength).toBe(8)
+    expect(buf[0]).toBe(0)
+    expect(buf[1]).toBe(0)
+    expect(buf[2]).toBe(0)
+    expect(buf[3]).toBe(1)
+    expect(buf[4]).toBe(0)
+    expect(buf[5]).toBe(0)
+    expect(buf[6]).toBe(0)
+    expect(buf[7]).toBe(2)
+
+    const buf2 = intArrayToBytes(num, false)
+
+    expect(buf2.length).toBe(8)
+    expect(buf2.byteLength).toBe(8)
+    expect(buf2[0]).toBe(1)
+    expect(buf2[1]).toBe(0)
+    expect(buf2[2]).toBe(0)
+    expect(buf2[3]).toBe(0)
+    expect(buf2[4]).toBe(2)
+    expect(buf2[5]).toBe(0)
+    expect(buf2[6]).toBe(0)
+    expect(buf2[7]).toBe(0)
 
 })
 

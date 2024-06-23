@@ -35,6 +35,34 @@ export function intToBytes(
 }
 
 /**
+ * Converts an array of integers into a buffer of bytes.
+ * 
+ * Used for converting between data transmission formats
+ * which different driver boards use.
+ * 
+ * eg. Some expect input in a byte array, but give output
+ * as an int array.
+ * 
+ * @param intarray Integer array to convert to bytes
+ * @param bigEndian If true, use big endian order. If false, little endian.
+ * @returns Buffer containing bytes
+ */
+export function intArrayToBytes(
+    intArray: Array<number>,
+    bigEndian: boolean
+): Buffer {
+    const bytes = Buffer.alloc(intArray.length * 4)
+    intArray.forEach((x, index) => {
+        const i = index * 4
+        if (bigEndian)
+            bytes.writeInt32BE(x, i)
+        else
+            bytes.writeInt32LE(x, i)
+    })
+    return bytes
+}
+
+/**
  * @param x Short to convert to bytes
  * @param bigEndian If true, use big endian order. If false, little endian.
  * @returns Buffer containing 2 bytes
