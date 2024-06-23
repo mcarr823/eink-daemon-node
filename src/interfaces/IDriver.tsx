@@ -1,3 +1,4 @@
+import Image from "@/classes/Image";
 import { BitsPerPixel } from "@/enums/BitsPerPixel";
 
 /**
@@ -22,7 +23,7 @@ export default interface IDriver{
     waitUntilPanelReady(): void;
 
     // Draw an image on the panel
-    draw(x: number, y: number, image: Buffer, displayModeOverride: number): void;
+    draw(x: number, y: number, image: Image, displayModeOverride: number): void;
 
     // Clear the panel
     clear(): void;

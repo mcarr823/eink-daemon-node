@@ -3,6 +3,7 @@ import { Uint8 } from "@/classes/IntConverter";
 import UsbCommandStatusWrapper from "@/classes/UsbCommandStatusWrapper";
 import IUsbDriver from "@/interfaces/IUsbDriver";
 import { BitsPerPixel } from "@/enums/BitsPerPixel";
+import Image from "@/classes/Image";
 
 export default abstract class AbstractUsbDriver implements IUsbDriver{
 
@@ -20,7 +21,7 @@ export default abstract class AbstractUsbDriver implements IUsbDriver{
     abstract write_register_fast(address: number, data: Buffer): void;
     abstract init(): void;
     abstract waitUntilPanelReady(): void;
-    abstract draw(x: number, y: number, image: Buffer, displayModeOverride: number): void;
+    abstract draw(x: number, y: number, image: Image, displayModeOverride: number): void;
     abstract clear(): void;
 
     // Usb driver properties
@@ -97,12 +98,11 @@ export default abstract class AbstractUsbDriver implements IUsbDriver{
     write_command(
         command: Buffer,
         value_data: Buffer,
-        extra_data: Buffer = Buffer.alloc(0),
+        extra_data: Buffer,
         bigEndian: boolean = false
     ){
 
         // combine this with any additional data
-        Buffer.concat
         const bulk_data = Buffer.concat([value_data, extra_data])
 
         // issue CBW block
