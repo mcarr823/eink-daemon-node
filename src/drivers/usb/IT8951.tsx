@@ -65,6 +65,10 @@ class USB_IT8951 extends AbstractUsbDriver {
     // but most of the time we'll re-use the previous display mode.
     last_display_mode: DisplayMode = DisplayMode.INIT
 
+    // The IT8951 panels support either 6 or 8 different display modes,
+    // depending on which model of panel it is.
+    display_modes_supported: number = 0
+
     read_register(address: number, length: number): Promise<Buffer> {
         const lengthBytes = shortToBytes(length, true)
         const cmd = UsbRegisterCommand({
@@ -101,6 +105,7 @@ class USB_IT8951 extends AbstractUsbDriver {
         this.base_address = sysInfo.image_buffer_base;
         this.width = sysInfo.width;
         this.height = sysInfo.height;
+        this.display_modes_supported = sysInfo.mode
         
     }
 
@@ -354,10 +359,14 @@ class USB_IT8951 extends AbstractUsbDriver {
         const width_as_bytes = shortToBytes(panel_width_bytes_1bpp, false)
         await this.write_register(this.REG_WIDTH, width_as_bytes)
 
-        // Set the display mode to either A2 or DU
-        // This should probably be set elsewhere
+        // Set the display mode to either A2 or DU.
+        // This should probably be set elsewhere and be changes on a per-draw
+        // basis instead.
         if (bpp == 1)
-            this.last_display_mode = DisplayMode.A2
+            if (this.display_modes_supported == 6)
+                this.last_display_mode = DisplayMode.A2_M641
+            else
+                this.last_display_mode = DisplayMode.A2_M841
         else
             this.last_display_mode = DisplayMode.DU4
 
@@ -469,7 +478,8 @@ enum DisplayMode{
     UNDEFINED = -1,
     INIT = 0,
     DU4 = 1,
-    A2 = 6
+    A2_M641 = 4,
+    A2_M841 = 6
 }
 
 enum RegisterCommand{
