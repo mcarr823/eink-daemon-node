@@ -27,5 +27,27 @@ export default interface IDriver{
 
     // Clear the panel
     clear(): Promise<void>;
+
+    /**
+     * Writes a buffer filled with bytes to a socket.
+     * 
+     * @param data Bytes to write to the socket
+     * @returns Number of bytes written to the socket
+     * @throws Error if write fails
+     */
+    write(
+        data: Buffer
+    ): Promise<number>
+
+    /**
+     * Reads a set number of bytes from the socket.
+     * 
+     * @param length Number of bytes to read from the socket
+     * @returns Buffer of byte data if successfully read
+     * @throws Error if read fails
+     */
+    read(
+        length: number
+    ): Promise<Buffer>
     
 }

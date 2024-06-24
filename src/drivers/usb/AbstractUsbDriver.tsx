@@ -211,13 +211,6 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
 
     }
 
-    /**
-     * Reads a set number of bytes from the socket.
-     * 
-     * @param length Number of bytes to read from the socket
-     * @returns Buffer of byte data if successfully read
-     * @throws Error if USB read fails
-     */
     async read(
         length: number
     ): Promise<Buffer> {
@@ -237,13 +230,6 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
 
     }
 
-    /**
-     * Writes a buffer filled with bytes to a socket.
-     * 
-     * @param data Bytes to write to the socket
-     * @returns Number of bytes written to the socket
-     * @throws Error if write fails
-     */
     async write(
         data: Buffer
     ): Promise<number> {
