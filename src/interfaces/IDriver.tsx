@@ -49,5 +49,10 @@ export default interface IDriver{
     read(
         length: number
     ): Promise<Buffer>
+
+    /**
+     * Closes the socket connection
+     */
+    close(): Promise<void>
     
 }

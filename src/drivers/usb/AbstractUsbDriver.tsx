@@ -39,6 +39,7 @@ export default async function UsbDriver({
 }): Promise<{
     endpoint_in: InEndpoint;
     endpoint_out: OutEndpoint;
+    device: usb.Device;
 }>{
     
     const device = findByIds(vendorId, productId)
@@ -74,7 +75,8 @@ export default async function UsbDriver({
 
     return {
         endpoint_in,
-        endpoint_out
+        endpoint_out,
+        device
     }
 
 }
@@ -100,14 +102,17 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
     tag_num: number = 0;
     endpoint_in: InEndpoint
     endpoint_out: OutEndpoint
+    device: usb.Device
 
     constructor(
         endpoint_in: InEndpoint,
-        endpoint_out: OutEndpoint
+        endpoint_out: OutEndpoint,
+        device: usb.Device
     ){
         super()
         this.endpoint_in = endpoint_in
         this.endpoint_out = endpoint_out
+        this.device = device
     }
 
     /**
@@ -245,6 +250,14 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
         else
             return bytesWritten
         
+    }
+
+    close(): Promise<void> {
+
+        return new Promise((cb: () => void) => {
+            this.device.close()
+            cb()
+        })
     }
 
 

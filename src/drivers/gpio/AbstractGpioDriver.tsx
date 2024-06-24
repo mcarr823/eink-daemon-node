@@ -148,6 +148,16 @@ export abstract class AbstractGpioDriver extends AbstractDriver implements IGpio
         return msg
 
     }
+
+    close(): Promise<void> {
+
+        return new Promise((cb: () => void) => {
+            this.spi.close((error: Error | null | undefined) => {
+                cb()
+            })
+        })
+
+    }
     
     
 }
