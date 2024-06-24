@@ -16,6 +16,7 @@
     "pureimage": "^0.4.13",
     "react": "^18",
     "react-dom": "^18",
+    "spi-device": "^3.1.2",
     "ts-node": "^10.9.2",
     "usb": "^2.13.0"
   },
