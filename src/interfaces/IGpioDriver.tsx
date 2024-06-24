@@ -11,6 +11,6 @@ export default interface IGpioDriver extends IDriver {
     // before proceeding.
     // Not to be confused with the IDriver function: waitUntilPanelReady
     // A panel can be ready when the pins are not, and vice versa.
-    waitUntilGpioPinReady(): void
+    waitUntilGpioPinReady(): Promise<void>
 
 }
