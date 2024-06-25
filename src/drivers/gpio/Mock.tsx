@@ -82,7 +82,9 @@ export class GPIO_Mock extends AbstractGpioDriver{
     }
     
     async query(): Promise<IPanelQueryResult> {
-        return {}
+        return {
+            vcom: 2000
+        }
     }
 
 }

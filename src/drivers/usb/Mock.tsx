@@ -87,7 +87,9 @@ export class USB_Mock extends AbstractUsbDriver{
     }
     
     async query(): Promise<IPanelQueryResult> {
-        return {}
+        return {
+            vcom: 2000
+        }
     }
 
 }

@@ -6,4 +6,8 @@
  * likely be nullable.
  */
 export default interface IPanelQueryResult{
+
+    // Voltage
+    vcom: number;
+    
 }
