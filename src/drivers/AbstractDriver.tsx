@@ -24,6 +24,9 @@ export default abstract class AbstractDriver implements IDriver{
     abstract waitUntilPanelReady(): Promise<void>;
     abstract draw(x: number, y: number, image: Image, displayModeOverride: number, refreshAfter: boolean): Promise<void>;
     abstract clear(): Promise<void>;
+    abstract read(length: number): Promise<Buffer>;
+    abstract write(data: Buffer): Promise<number>;
+    abstract close(): Promise<void>;
 
     // Whether this board/driver needs to flip words when packing
     flipWord: boolean = false;
