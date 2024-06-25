@@ -16,9 +16,7 @@ import { useEffect, useState } from "react"
  */
 export default function SetupPageViewModel() : ISetupPageViewModel{
 
-    const drivers = [Drivers.USB, Drivers.GPIO]
-    const usbPanels = [UsbPanels.IT8951]
-    const gpioPanels = [GpioPanels.MOCK]
+    const drivers = Object.values(Drivers)
 
     const [driver, setDriver] = useState<string>(Drivers.USB.toString())
     const [panel, setPanel] = useState(UsbPanels.IT8951.toString())
@@ -38,7 +36,9 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
     // When the user selects a driver, change the available
     // panels to match the driver selection.
     useEffect(() => {
-        if (driver === Drivers.USB.toString())
+        const usbPanels = Object.values(UsbPanels)
+        const gpioPanels = Object.values(GpioPanels)
+        if (driver === Drivers.USB)
             setPanels(usbPanels)
         else
             setPanels(gpioPanels)
