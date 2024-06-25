@@ -18,7 +18,7 @@ export default function SetupPageViewModel() : ISetupPageViewModel{
 
     const drivers = [Drivers.USB, Drivers.GPIO]
     const usbPanels = [UsbPanels.IT8951]
-    const gpioPanels = [GpioPanels.UNSUPPORTED]
+    const gpioPanels = [GpioPanels.MOCK]
 
     const [driver, setDriver] = useState<string>(Drivers.USB.toString())
     const [panel, setPanel] = useState(UsbPanels.IT8951.toString())

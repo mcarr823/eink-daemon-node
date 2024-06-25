@@ -8,5 +8,6 @@
  * Any values in here should map to panels in /src/drivers/usb
  */
 export enum UsbPanels{
+    MOCK = "Mock Panel (for testing purposes only)",
     IT8951 = "IT8951"
 }
