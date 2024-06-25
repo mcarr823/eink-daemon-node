@@ -3,16 +3,17 @@ import UsbDriver, { AbstractUsbDriver } from "./AbstractUsbDriver";
 import { BitsPerPixel } from "@/enums/BitsPerPixel";
 import { Uint8, bytesToIntArray, intArrayToBytes, shortToBytes } from "@/classes/IntConverter";
 import Image from "@/classes/Image";
+import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
 
 export default async function IT8951Usb(): Promise<USB_IT8951> {
-    const { endpoint_in, endpoint_out } = await UsbDriver({
+    const { endpoint_in, endpoint_out, device } = await UsbDriver({
         vendorId: 0x048d,
         productId: 0x8951,
         device_interface_number: 0,
         endpoint_in_number: 0,
         endpoint_out_number: 1
     })
-    return new USB_IT8951(endpoint_in, endpoint_out)
+    return new USB_IT8951(endpoint_in, endpoint_out, device)
 }
 
 class USB_IT8951 extends AbstractUsbDriver {
@@ -183,6 +184,10 @@ class USB_IT8951 extends AbstractUsbDriver {
         const image = new Image(this.width, this.height)
         image.fill("#FFF")
         return this.draw(0, 0, image, DisplayMode.INIT)
+    }
+
+    async query(): Promise<IPanelQueryResult> {
+        throw new Error("Not yet implemented")
     }
 
 
