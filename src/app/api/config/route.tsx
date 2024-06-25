@@ -3,6 +3,8 @@ import fs from "node:fs"
 import NextResponseError from "@/network/NextResponseError"
 import NextResponseSuccess from "@/network/NextResponseSuccess"
 import { NextRequest } from "next/server"
+import { Drivers } from "@/enums/Drivers"
+import { UsbPanels } from "@/enums/UsbPanels"
 
 export const configFile = process.cwd()+"/data/config.json"
 
@@ -10,8 +12,8 @@ export const dynamic = 'force-dynamic' // defaults to auto
 
 export async function GET(_: NextRequest) {
     var config: IConfig = {
-        driver: "",
-        panel: "",
+        driver: Drivers.USB,
+        panel: UsbPanels.MOCK,
         remote: false,
         host: "",
         port: 0
