@@ -37,7 +37,7 @@ export default function SimpleSelect(args: ISimpleSelectArgs){
         <select
             className="form-control"
             id={args.id}
-            value={args.value}
+            defaultValue={args.value}
             onChange={setValue}
             >
             {children}
