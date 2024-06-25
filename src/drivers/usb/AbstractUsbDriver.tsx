@@ -6,6 +6,7 @@ import { BitsPerPixel } from "@/enums/BitsPerPixel";
 import Image from "@/classes/Image";
 import AbstractDriver from "../AbstractDriver";
 import { usb, findByIds, InEndpoint, OutEndpoint, Endpoint, LibUSBException } from 'usb';
+import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
 
 /**
  * Connects asynchronously to a given USB device.
@@ -97,6 +98,7 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
     abstract waitUntilPanelReady(): Promise<void>;
     abstract draw(x: number, y: number, image: Image, displayModeOverride: number, refreshAfter: boolean): Promise<void>;
     abstract clear(): Promise<void>;
+    abstract query(): Promise<IPanelQueryResult>;
 
     // Usb driver properties
     tag_num: number = 0;

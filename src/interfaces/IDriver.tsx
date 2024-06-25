@@ -1,5 +1,6 @@
 import Image from "@/classes/Image";
 import { BitsPerPixel } from "@/enums/BitsPerPixel";
+import IPanelQueryResult from "./IPanelQueryResult";
 
 /**
  * Interface from which any driver implementation should inherit.
@@ -54,5 +55,7 @@ export default interface IDriver{
      * Closes the socket connection
      */
     close(): Promise<void>
+
+    query(): Promise<IPanelQueryResult>
     
 }

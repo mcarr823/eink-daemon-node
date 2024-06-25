@@ -4,6 +4,7 @@ import { BitsPerPixel } from "@/enums/BitsPerPixel";
 import Image from "@/classes/Image";
 import { Gpio } from "pigpio";
 import { SpiDevice, SpiMessage, openSync } from "spi-device";
+import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
 
 /**
  * Connects asynchronously to a given USB device.
@@ -47,6 +48,7 @@ export abstract class AbstractGpioDriver extends AbstractDriver implements IGpio
     abstract waitUntilPanelReady(): Promise<void>;
     abstract draw(x: number, y: number, image: Image, displayModeOverride: number, refreshAfter: boolean): Promise<void>;
     abstract clear(): Promise<void>;
+    abstract query(): Promise<IPanelQueryResult>;
 
     // Abstract properties for this class
     abstract useDcPin: boolean
