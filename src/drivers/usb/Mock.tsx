@@ -2,7 +2,9 @@ import Image from "@/classes/Image";
 import { BitsPerPixel } from "@/enums/BitsPerPixel";
 import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
 import { AbstractUsbDriver } from "./AbstractUsbDriver";
-import { InEndpoint, OutEndpoint, Device, EndpointDescriptor } from "usb";
+import MockUsbDevice from "@/classes/mock/MockUsbDevice";
+import MockUsbInEndpoint from "@/classes/mock/MockUsbInEndpoint";
+import MockUsbOutEndpoint from "@/classes/mock/MockUsbOutEndpoint";
 
 export default async function MockUsb(
     bpp: BitsPerPixel = BitsPerPixel.BPP1,
@@ -45,20 +47,9 @@ export class USB_Mock extends AbstractUsbDriver{
         height: number,
         useDcPin: boolean
     ){
-        const device = new Device()
-        const desc: EndpointDescriptor = {
-            bLength: 0,
-            bDescriptorType: 0,
-            bEndpointAddress: 0,
-            bmAttributes: 0,
-            wMaxPacketSize: 0,
-            bInterval: 0,
-            bRefresh: 0,
-            bSynchAddress: 0,
-            extra: Buffer.alloc(0)
-        }
-        const input = new InEndpoint(device, desc)
-        const output = new OutEndpoint(device, desc)
+        const device = new MockUsbDevice()
+        const input = new MockUsbInEndpoint()
+        const output = new MockUsbOutEndpoint()
         super(input, output, device)
         this.bpp = bpp
         this.base_address = base_address
