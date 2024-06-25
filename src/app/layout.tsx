@@ -17,6 +17,7 @@ export default function RootLayout({
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                 <NavLink text="About" href="/"/>
                 <NavLink text="Setup" href="/setup"/>
+                <NavLink text="Query" href="/query"/>
               </ul>
             </div>
           </div>
