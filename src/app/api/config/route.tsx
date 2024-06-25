@@ -12,6 +12,7 @@ export async function GET(_: NextRequest) {
     var config: IConfig = {
         driver: "",
         panel: "",
+        remote: false,
         host: "",
         port: 0
     }
@@ -36,8 +37,13 @@ export async function PUT(request: NextRequest) {
         const config: IConfig = await request.json()
 
         // Check each of the expected parameters
-        if (typeof config.driver === 'undefined') throw Error("Driver not specified")
-        if (typeof config.panel === 'undefined') throw Error("Panel not specified")
+        if (
+            typeof config.driver === 'undefined' ||
+            typeof config.panel === 'undefined' ||
+            typeof config.remote === 'undefined' ||
+            typeof config.host === 'undefined' ||
+            typeof config.port === 'undefined'
+        ) throw Error("One or more expected parameters not specified")
         
         const data = JSON.stringify(config)
 
