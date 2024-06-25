@@ -4,6 +4,22 @@ import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
 import { AbstractUsbDriver } from "./AbstractUsbDriver";
 import { InEndpoint, OutEndpoint, Device, EndpointDescriptor } from "usb";
 
+export default async function MockUsb(
+    bpp: BitsPerPixel = BitsPerPixel.BPP1,
+    base_address: number = 0,
+    width: number = 0,
+    height: number = 0,
+    useDcPin: boolean = false
+): Promise<USB_Mock> {
+    return new USB_Mock(
+        bpp,
+        base_address,
+        width,
+        height,
+        useDcPin
+    )
+}
+
 /**
  * Mock USB driver.
  * 
@@ -27,7 +43,7 @@ export class USB_Mock extends AbstractUsbDriver{
         base_address: number,
         width: number,
         height: number,
-        useDbPin: boolean
+        useDcPin: boolean
     ){
         const device = new Device()
         const desc: EndpointDescriptor = {
@@ -48,7 +64,7 @@ export class USB_Mock extends AbstractUsbDriver{
         this.base_address = base_address
         this.width = width
         this.height = height
-        this.useDcPin = useDbPin
+        this.useDcPin = useDcPin
     }
 
     async init(): Promise<void> {

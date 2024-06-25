@@ -4,6 +4,22 @@ import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
 import { AbstractGpioDriver } from "./AbstractGpioDriver";
 import { SpiDevice } from "spi-device";
 
+export default async function MockGpio(
+    bpp: BitsPerPixel = BitsPerPixel.BPP1,
+    base_address: number = 0,
+    width: number = 0,
+    height: number = 0,
+    useDcPin: boolean = false
+){
+    return new GPIO_Mock(
+        bpp,
+        base_address,
+        width,
+        height,
+        useDcPin
+    )
+}
+
 /**
  * Mock GPIO driver.
  * 
@@ -27,14 +43,14 @@ export class GPIO_Mock extends AbstractGpioDriver{
         base_address: number,
         width: number,
         height: number,
-        useDbPin: boolean
+        useDcPin: boolean
     ){
         super(new SpiDevice())
         this.bpp = bpp
         this.base_address = base_address
         this.width = width
         this.height = height
-        this.useDcPin = useDbPin
+        this.useDcPin = useDcPin
     }
 
     async waitUntilGpioPinReady(): Promise<void> {
