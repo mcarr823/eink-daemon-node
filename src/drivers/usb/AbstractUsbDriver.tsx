@@ -7,6 +7,9 @@ import Image from "@/classes/Image";
 import AbstractDriver from "../AbstractDriver";
 import { usb, findByIds, InEndpoint, OutEndpoint, Endpoint, LibUSBException } from 'usb';
 import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
+import IInEndpoint from "@/interfaces/IInEndpoint";
+import IOutEndpoint from "@/interfaces/IOutEndpoint";
+import IUsbDevice from "@/interfaces/IUsbDevice";
 
 /**
  * Connects asynchronously to a given USB device.
@@ -102,14 +105,14 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
 
     // Usb driver properties
     tag_num: number = 0;
-    endpoint_in: InEndpoint
-    endpoint_out: OutEndpoint
-    device: usb.Device
+    endpoint_in: IInEndpoint
+    endpoint_out: IOutEndpoint
+    device: IUsbDevice
 
     constructor(
-        endpoint_in: InEndpoint,
-        endpoint_out: OutEndpoint,
-        device: usb.Device
+        endpoint_in: IInEndpoint,
+        endpoint_out: IOutEndpoint,
+        device: IUsbDevice
     ){
         super()
         this.endpoint_in = endpoint_in
@@ -222,7 +225,7 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
         length: number
     ): Promise<Buffer> {
 
-        const { error, data } = await new Promise((cb: (args: { error: LibUSBException | undefined, data?: Buffer }) => void) => {
+        const { error, data } = await new Promise((cb: (args: { error: Error | undefined, data?: Buffer }) => void) => {
             this.endpoint_in.transfer(length, (error, data) => {
                 cb({ error, data })
             })
@@ -241,7 +244,7 @@ export abstract class AbstractUsbDriver extends AbstractDriver implements IUsbDr
         data: Buffer
     ): Promise<number> {
 
-        const { error, bytesWritten } = await new Promise((cb: (args: { error: LibUSBException | undefined, bytesWritten: number }) => void) => {
+        const { error, bytesWritten } = await new Promise((cb: (args: { error: Error | undefined, bytesWritten: number }) => void) => {
             this.endpoint_out.transfer(data, (error, bytesWritten) => {
                 cb({ error, bytesWritten })
             })
