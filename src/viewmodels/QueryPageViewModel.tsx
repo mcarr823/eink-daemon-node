@@ -1,3 +1,4 @@
+import IConfig from "@/interfaces/IConfig"
 import { useEffect, useState } from "react"
 
 /**
@@ -13,28 +14,23 @@ export default function QueryPageViewModel() : IQueryPageViewModel{
         "Specify Manually"
     ]
 
-    const [config, setConfig] = useState<string>(USE_DAEMON)
+    const [selectedConfig, setSelectedConfig] = useState<string>(USE_DAEMON)
     const [queryInProgress, setQueryInProgress] = useState<boolean>(false)
     const [showConnectionDetails, setShowConnectionDetails] = useState<boolean>(false)
 
     // Whenever the panels variable changes, reset the panel
     // variable to whatever the first option is.
     useEffect(() => {
-        const show = config !== USE_DAEMON
+        const show = selectedConfig !== USE_DAEMON
         setShowConnectionDetails(show)
-    }, [config])
+    }, [selectedConfig])
 
     const query = (
+        config: IConfig,
         callback: (data: JSON) => void
     ) => {
 
         setQueryInProgress(true)
-
-        // TODO perform the query
-        // TODO display the info
-
-        // TODO config arguments
-        const config = {}
 
         fetch('/api/query', {
             method: 'POST',
@@ -55,7 +51,7 @@ export default function QueryPageViewModel() : IQueryPageViewModel{
         showConnectionDetails,
         query,
         configs,
-        config, setConfig,
+        selectedConfig, setSelectedConfig,
         queryInProgress
     }
 
@@ -63,9 +59,9 @@ export default function QueryPageViewModel() : IQueryPageViewModel{
 
 interface IQueryPageViewModel{
     showConnectionDetails: boolean;
-    query: (callback: (data: JSON) => void) => void;
+    query: (config: IConfig, callback: (data: JSON) => void) => void;
     configs: Array<string>;
-    config: string;
-    setConfig: (value: string) => void;
+    selectedConfig: string;
+    setSelectedConfig: (value: string) => void;
     queryInProgress: boolean;
 }

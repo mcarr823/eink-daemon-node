@@ -1,12 +1,14 @@
 "use client";
-import SetupPageViewModel from '@/viewmodels/SetupPageViewModel';
+
 import SimpleSelect from '../components/SimpleSelect';
 import SubmitButton from '../components/SubmitButton';
 import Toast from '../components/Toast';
 import ToastViewModel from '@/viewmodels/ToastViewModel';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler } from 'react';
 import HorizontalLine from '../components/HorizontalLine';
 import QueryPageViewModel from '@/viewmodels/QueryPageViewModel';
+import IConfig from '@/interfaces/IConfig';
+import ConfigViewModel from '@/viewmodels/ConfigViewModel';
 
 /**
  * Panel query screen.
@@ -16,11 +18,18 @@ import QueryPageViewModel from '@/viewmodels/QueryPageViewModel';
 export default function QueryPage(){
 
     const queryModel = QueryPageViewModel()
-    const setupModel = SetupPageViewModel()
+    const configModel = ConfigViewModel()
     const toast = ToastViewModel()
 
     const query = () => {
-        queryModel.query((data: JSON) => {
+        const config: IConfig = {
+            driver: configModel.driver,
+            panel: configModel.panel,
+            remote: configModel.remote,
+            host: configModel.host,
+            port: configModel.port,
+        }
+        queryModel.query(config, (data: JSON) => {
             // TODO display the result
         });
     }
@@ -29,20 +38,20 @@ export default function QueryPage(){
     // Only show the host and port if `remote` is ticked
     const showConn = queryModel.showConnectionDetails
     const connectionStyles = showConn ? {} : {display:'none'}
-    const hostAndPortStyles = showConn && setupModel.remote ? {} : {display:'none'}
+    const hostAndPortStyles = showConn && configModel.remote ? {} : {display:'none'}
 
     const setHost: ChangeEventHandler<HTMLInputElement> = (event) => {
-        setupModel.setHost(event.target.value)
+        configModel.setHost(event.target.value)
     }
 
     const setPort: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = parseInt(event.target.value)
-        setupModel.setPort(value)
+        configModel.setPort(value)
     }
 
     const setRemote: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = event.target.checked;
-        setupModel.setRemote(value)
+        configModel.setRemote(value)
     }
 
     return (
@@ -67,26 +76,26 @@ export default function QueryPage(){
                                 <SimpleSelect
                                     id="config"
                                     values={queryModel.configs}
-                                    value={queryModel.config}
-                                    setValue={queryModel.setConfig}
+                                    value={queryModel.selectedConfig}
+                                    setValue={queryModel.setSelectedConfig}
                                     />
                             </div>
                             <div className="mt-3 mb-3" style={connectionStyles}>
                                 <label htmlFor="driver" className="form-label">Connection Type</label>
                                 <SimpleSelect
                                     id="driver"
-                                    values={setupModel.drivers}
-                                    value={setupModel.driver}
-                                    setValue={setupModel.setDriver}
+                                    values={configModel.drivers}
+                                    value={configModel.driver}
+                                    setValue={configModel.setDriver}
                                     />
                             </div>
                             <div className="mb-3" style={connectionStyles}>
                                 <label htmlFor="panel" className="form-label">Panel</label>
                                 <SimpleSelect
                                     id="panel"
-                                    values={setupModel.panels}
-                                    value={setupModel.panel}
-                                    setValue={setupModel.setPanel}
+                                    values={configModel.panels}
+                                    value={configModel.panel}
+                                    setValue={configModel.setPanel}
                                     />
                             </div>
                             <div className="mb-3 form-check" style={connectionStyles}>
@@ -95,7 +104,7 @@ export default function QueryPage(){
                                     id="remote"
                                     type="checkbox"
                                     className="form-check-input"
-                                    checked={setupModel.remote}
+                                    checked={configModel.remote}
                                     onChange={setRemote}
                                     />
                             </div>
@@ -105,7 +114,7 @@ export default function QueryPage(){
                                     id="host"
                                     type="text"
                                     className="form-control"
-                                    defaultValue={setupModel.host}
+                                    defaultValue={configModel.host}
                                     onChange={setHost}
                                     />
                             </div>
@@ -115,7 +124,7 @@ export default function QueryPage(){
                                     id="port"
                                     type="text"
                                     className="form-control"
-                                    defaultValue={setupModel.port}
+                                    defaultValue={configModel.port}
                                     onChange={setPort}
                                     />
                             </div>
