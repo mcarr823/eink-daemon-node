@@ -6,6 +6,8 @@ import Toast from '../components/Toast';
 import ToastViewModel from '@/viewmodels/ToastViewModel';
 import { ChangeEventHandler } from 'react';
 import HorizontalLine from '../components/HorizontalLine';
+import ConfigViewModel from '@/viewmodels/ConfigViewModel';
+import IConfig from '@/interfaces/IConfig';
 
 /**
  * Daemon setup screen.
@@ -18,13 +20,21 @@ import HorizontalLine from '../components/HorizontalLine';
 export default function SetupPage(){
 
     const model = SetupPageViewModel()
+    const configModel = ConfigViewModel()
     const toast = ToastViewModel()
 
     // Only show the host and port if `remote` is ticked
-    const hostAndPortStyles = model.remote ? {} : {display:'none'}
+    const hostAndPortStyles = configModel.remote ? {} : {display:'none'}
 
     const save = () => {
-        model.save((data: JSON) => {
+        const config: IConfig = {
+            driver: configModel.driver,
+            panel: configModel.panel,
+            remote: configModel.remote,
+            host: configModel.host,
+            port: configModel.port,
+        }
+        model.save(config, (data: JSON) => {
             if ('error' in data){
                 const error = data.error as string
                 toast.error(error)
@@ -35,17 +45,17 @@ export default function SetupPage(){
     }
 
     const setHost: ChangeEventHandler<HTMLInputElement> = (event) => {
-        model.setHost(event.target.value)
+        configModel.setHost(event.target.value)
     }
 
     const setPort: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = parseInt(event.target.value)
-        model.setPort(value)
+        configModel.setPort(value)
     }
 
     const setRemote: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = event.target.checked;
-        model.setRemote(value)
+        configModel.setRemote(value)
     }
 
     return (
@@ -69,18 +79,18 @@ export default function SetupPage(){
                                 <label htmlFor="driver" className="form-label">Connection Type</label>
                                 <SimpleSelect
                                     id="driver"
-                                    values={model.drivers}
-                                    value={model.driver}
-                                    setValue={model.setDriver}
+                                    values={configModel.drivers}
+                                    value={configModel.driver}
+                                    setValue={configModel.setDriver}
                                     />
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="panel" className="form-label">Panel</label>
                                 <SimpleSelect
                                     id="panel"
-                                    values={model.panels}
-                                    value={model.panel}
-                                    setValue={model.setPanel}
+                                    values={configModel.panels}
+                                    value={configModel.panel}
+                                    setValue={configModel.setPanel}
                                     />
                             </div>
                             <div className="mb-3 form-check">
@@ -89,7 +99,7 @@ export default function SetupPage(){
                                     id="remote"
                                     type="checkbox"
                                     className="form-check-input"
-                                    checked={model.remote}
+                                    checked={configModel.remote}
                                     onChange={setRemote}
                                     />
                             </div>
@@ -99,7 +109,7 @@ export default function SetupPage(){
                                     id="host"
                                     type="text"
                                     className="form-control"
-                                    defaultValue={model.host}
+                                    defaultValue={configModel.host}
                                     onChange={setHost}
                                     />
                             </div>
@@ -109,7 +119,7 @@ export default function SetupPage(){
                                     id="port"
                                     type="text"
                                     className="form-control"
-                                    defaultValue={model.port}
+                                    defaultValue={configModel.port}
                                     onChange={setPort}
                                     />
                             </div>
