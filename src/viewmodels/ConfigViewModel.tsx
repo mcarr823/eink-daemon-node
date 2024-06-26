@@ -41,6 +41,15 @@ export default function ConfigViewModel() : IConfigViewModel{
         }
     }
 
+    // Load a config object into the viewmodel
+    const importConfig = (config: IConfig) => {
+        setDriver(config.driver)
+        setPanel(config.panel)
+        setRemote(config.remote)
+        setHost(config.host)
+        setPort(config.port)
+    }
+
     // Whenever the panels variable changes, reset the panel
     // variable to whatever the first option is.
     useEffect(() => {
@@ -65,11 +74,7 @@ export default function ConfigViewModel() : IConfigViewModel{
                 .then((res) => res.json())
                 .then((res: INextResponseSuccess) => {
                     const data = res.data as IConfig
-                    setDriver(data.driver)
-                    setPanel(data.panel)
-                    setRemote(data.remote)
-                    setHost(data.host)
-                    setPort(data.port)
+                    importConfig(data)
                     setLoading(false)
                 })
         }
