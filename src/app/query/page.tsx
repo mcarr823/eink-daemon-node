@@ -9,6 +9,7 @@ import HorizontalLine from '../components/HorizontalLine';
 import QueryPageViewModel from '@/viewmodels/QueryPageViewModel';
 import IConfig from '@/interfaces/IConfig';
 import ConfigViewModel from '@/viewmodels/ConfigViewModel';
+import SimpleInput from '../components/SimpleInput';
 
 /**
  * Panel query screen.
@@ -39,10 +40,6 @@ export default function QueryPage(){
     const showConn = queryModel.showConnectionDetails
     const connectionStyles = showConn ? {} : {display:'none'}
     const hostAndPortStyles = showConn && configModel.remote ? {} : {display:'none'}
-
-    const setHost: ChangeEventHandler<HTMLInputElement> = (event) => {
-        configModel.setHost(event.target.value)
-    }
 
     const setPort: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = parseInt(event.target.value)
@@ -110,12 +107,10 @@ export default function QueryPage(){
                             </div>
                             <div className="mb-3" style={hostAndPortStyles}>
                                 <label htmlFor="host" className="form-label">Host</label>
-                                <input
+                                <SimpleInput
                                     id="host"
-                                    type="text"
-                                    className="form-control"
-                                    defaultValue={configModel.host}
-                                    onChange={setHost}
+                                    value={configModel.host}
+                                    setValue={configModel.setHost}
                                     />
                             </div>
                             <div className="mb-3" style={hostAndPortStyles}>
