@@ -31,10 +31,7 @@ export async function POST(request: NextRequest) {
         // Query the panel for whichever information it will give us.
         const queryResult = await panel.query()
         
-        // Put the details in a string and send it back in the
-        // API response data.
-        const data = JSON.stringify(queryResult)
-        return NextResponseSuccess(data)
+        return NextResponseSuccess(queryResult)
 
     }catch(err){
         console.error(err)
