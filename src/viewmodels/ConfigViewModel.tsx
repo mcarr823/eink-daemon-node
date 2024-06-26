@@ -29,6 +29,18 @@ export default function ConfigViewModel() : IConfigViewModel{
     const [panels, setPanels] = useState<Array<string>>([])
     const [loading, setLoading] = useState<boolean>(true)
 
+    // Create a Config object from the values currently held
+    // by this viewmodel
+    const exportConfig = (): IConfig => {
+        return {
+            driver,
+            panel,
+            remote,
+            host,
+            port
+        }
+    }
+
     // Whenever the panels variable changes, reset the panel
     // variable to whatever the first option is.
     useEffect(() => {
@@ -71,6 +83,7 @@ export default function ConfigViewModel() : IConfigViewModel{
         remote, setRemote,
         host, setHost,
         port, setPort,
+        exportConfig
     }
 
 }
@@ -88,4 +101,5 @@ interface IConfigViewModel{
     setHost: (value: string) => void;
     port: number;
     setPort: (value: number) => void;
+    exportConfig: () => IConfig;
 }

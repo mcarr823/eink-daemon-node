@@ -24,13 +24,7 @@ export default function QueryPage(){
     const toast = ToastViewModel()
 
     const query = () => {
-        const config: IConfig = {
-            driver: configModel.driver,
-            panel: configModel.panel,
-            remote: configModel.remote,
-            host: configModel.host,
-            port: configModel.port,
-        }
+        const config = configModel.exportConfig()
         queryModel.query(config, (data: JSON) => {
             // TODO display the result
         });

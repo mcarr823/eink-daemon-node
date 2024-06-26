@@ -29,13 +29,7 @@ export default function SetupPage(){
     const hostAndPortStyles = configModel.remote ? {} : {display:'none'}
 
     const save = () => {
-        const config: IConfig = {
-            driver: configModel.driver,
-            panel: configModel.panel,
-            remote: configModel.remote,
-            host: configModel.host,
-            port: configModel.port,
-        }
+        const config = configModel.exportConfig()
         model.save(config, (data: JSON) => {
             if ('error' in data){
                 const error = data.error as string
