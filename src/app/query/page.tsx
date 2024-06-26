@@ -10,6 +10,7 @@ import QueryPageViewModel from '@/viewmodels/QueryPageViewModel';
 import IConfig from '@/interfaces/IConfig';
 import ConfigViewModel from '@/viewmodels/ConfigViewModel';
 import SimpleInput from '../components/SimpleInput';
+import Checkbox from '../components/Checkbox';
 
 /**
  * Panel query screen.
@@ -40,11 +41,6 @@ export default function QueryPage(){
     const showConn = queryModel.showConnectionDetails
     const connectionStyles = showConn ? {} : {display:'none'}
     const hostAndPortStyles = showConn && configModel.remote ? {} : {display:'none'}
-
-    const setRemote: ChangeEventHandler<HTMLInputElement> = (event) => {
-        const value = event.target.checked;
-        configModel.setRemote(value)
-    }
 
     return (
         <div className="row justify-content-center">
@@ -92,12 +88,10 @@ export default function QueryPage(){
                             </div>
                             <div className="mb-3 form-check" style={connectionStyles}>
                                 <label htmlFor="remote" className="form-check-label">Remote</label>
-                                <input
+                                <Checkbox
                                     id="remote"
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    checked={configModel.remote}
-                                    onChange={setRemote}
+                                    value={configModel.remote}
+                                    setValue={configModel.setRemote}
                                     />
                             </div>
                             <div className="mb-3" style={hostAndPortStyles}>

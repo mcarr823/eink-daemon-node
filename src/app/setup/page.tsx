@@ -9,6 +9,7 @@ import HorizontalLine from '../components/HorizontalLine';
 import ConfigViewModel from '@/viewmodels/ConfigViewModel';
 import IConfig from '@/interfaces/IConfig';
 import SimpleInput from '../components/SimpleInput';
+import Checkbox from '../components/Checkbox';
 
 /**
  * Daemon setup screen.
@@ -43,11 +44,6 @@ export default function SetupPage(){
                 toast.success('Config updated successfully')
             }
         })
-    }
-
-    const setRemote: ChangeEventHandler<HTMLInputElement> = (event) => {
-        const value = event.target.checked;
-        configModel.setRemote(value)
     }
 
     return (
@@ -87,12 +83,10 @@ export default function SetupPage(){
                             </div>
                             <div className="mb-3 form-check">
                                 <label htmlFor="remote" className="form-check-label">Remote</label>
-                                <input
+                                <Checkbox
                                     id="remote"
-                                    type="checkbox"
-                                    className="form-check-input"
-                                    checked={configModel.remote}
-                                    onChange={setRemote}
+                                    value={configModel.remote}
+                                    setValue={configModel.setRemote}
                                     />
                             </div>
                             <div className="mb-3" style={hostAndPortStyles}>
