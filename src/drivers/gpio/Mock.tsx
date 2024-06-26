@@ -2,7 +2,7 @@ import Image from "@/classes/Image";
 import { BitsPerPixel } from "@/enums/BitsPerPixel";
 import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
 import { AbstractGpioDriver } from "./AbstractGpioDriver";
-import { SpiDevice } from "spi-device";
+import MockSpiDevice from "@/classes/mock/MockSpiDevice";
 
 export default async function MockGpio(
     bpp: BitsPerPixel = BitsPerPixel.BPP1,
@@ -45,7 +45,7 @@ export class GPIO_Mock extends AbstractGpioDriver{
         height: number,
         useDcPin: boolean
     ){
-        super(new SpiDevice())
+        super(new MockSpiDevice())
         this.bpp = bpp
         this.base_address = base_address
         this.width = width
