@@ -1,7 +1,7 @@
 import Image from "@/classes/Image";
 import { BitsPerPixel } from "@/enums/BitsPerPixel";
 import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
-import { AbstractUsbDriver } from "./AbstractUsbDriver";
+import AbstractUsbDriver from "./AbstractUsbDriver";
 import MockUsbDevice from "@/classes/mock/MockUsbDevice";
 import MockUsbInEndpoint from "@/classes/mock/MockUsbInEndpoint";
 import MockUsbOutEndpoint from "@/classes/mock/MockUsbOutEndpoint";
