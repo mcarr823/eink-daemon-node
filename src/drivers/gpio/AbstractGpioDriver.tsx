@@ -2,35 +2,11 @@ import IGpioDriver from "@/interfaces/IGpioDriver";
 import AbstractDriver from "../AbstractDriver";
 import { BitsPerPixel } from "@/enums/BitsPerPixel";
 import Image from "@/classes/Image";
-import { Gpio } from "pigpio";
-import { SpiDevice, SpiMessage, openSync } from "spi-device";
 import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
-
-/**
- * Connects asynchronously to a given USB device.
- * 
- * @param spi_bus_no BUS on which SPI is running
- * @param spi_dev_no Device on which SPI is running
- * @returns Promise with the SPI device
- */
-export default async function GpioDriver({
-    spi_bus_no = 0,
-    spi_dev_no = 0
-} : {
-    spi_bus_no: number;
-    spi_dev_no: number;
-}){
-
-    // SpiDev init must come first, otherwise CS_PIN read conflicts
-    // will sometimes occur during startup.
-    const spi = openSync(spi_bus_no, spi_dev_no, {
-        maxSpeedHz: 2000000, // 2MHz
-        noChipSelect: true
-    })
-
-    return spi
-
-}
+import ISpiDevice from "@/interfaces/ISpiDevice";
+import ISpiMessage from "@/interfaces/ISpiMessage";
+import IGpioPin from "@/interfaces/IGpioPin";
+import GpioPinBuilder from "@/classes/GpioPinBuilder";
 
 export abstract class AbstractGpioDriver extends AbstractDriver implements IGpioDriver{
 
@@ -54,8 +30,8 @@ export abstract class AbstractGpioDriver extends AbstractDriver implements IGpio
     abstract useDcPin: boolean
 
     // Properties for this class
-    pins = new Map<number, Gpio>()
-    spi: SpiDevice
+    pins = new Map<number, IGpioPin>()
+    spi: ISpiDevice
 
     // Common pin numbers
     // These might need to change for some panels
@@ -65,7 +41,7 @@ export abstract class AbstractGpioDriver extends AbstractDriver implements IGpio
     BUSY_PIN: number = 24
 
     constructor(
-        spi: SpiDevice
+        spi: ISpiDevice
     ){
         super()
         this.spi = spi
@@ -73,18 +49,18 @@ export abstract class AbstractGpioDriver extends AbstractDriver implements IGpio
 
     init(): Promise<void> {
 
-        const restPin = new Gpio(this.RST_PIN, {mode: Gpio.OUTPUT})
+        const restPin = GpioPinBuilder(this.RST_PIN, false)
         this.pins.set(this.RST_PIN, restPin)
 
         if (this.useDcPin){
-            const dcPin = new Gpio(this.DC_PIN, {mode: Gpio.OUTPUT})
+            const dcPin = GpioPinBuilder(this.DC_PIN, false)
             this.pins.set(this.DC_PIN, dcPin)
         }
 
-        const csPin = new Gpio(this.CS_PIN, {mode: Gpio.OUTPUT})
+        const csPin = GpioPinBuilder(this.CS_PIN, false)
         this.pins.set(this.CS_PIN, csPin)
 
-        const busyPin = new Gpio(this.BUSY_PIN, {mode: Gpio.INPUT})
+        const busyPin = GpioPinBuilder(this.BUSY_PIN, true)
         this.pins.set(this.BUSY_PIN, busyPin)
 
         return new Promise((cb: () => void) => {
@@ -135,10 +111,10 @@ export abstract class AbstractGpioDriver extends AbstractDriver implements IGpio
      * @returns Promise containing the response from the SPI transaction
      */
     private async transfer(
-        message: SpiMessage
-    ): Promise<SpiMessage>{
+        message: ISpiMessage[]
+    ): Promise<ISpiMessage[]>{
 
-        const { error, msg } = await new Promise((cb: (args: { error: Error | null | undefined, msg: SpiMessage }) => void) => {
+        const { error, msg } = await new Promise((cb: (args: { error: Error | null | undefined, msg: ISpiMessage[] }) => void) => {
             this.spi.transfer(message, (error, msg) => {
                 cb({ error, msg })
             })
