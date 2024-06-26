@@ -41,11 +41,6 @@ export default function QueryPage(){
     const connectionStyles = showConn ? {} : {display:'none'}
     const hostAndPortStyles = showConn && configModel.remote ? {} : {display:'none'}
 
-    const setPort: ChangeEventHandler<HTMLInputElement> = (event) => {
-        const value = parseInt(event.target.value)
-        configModel.setPort(value)
-    }
-
     const setRemote: ChangeEventHandler<HTMLInputElement> = (event) => {
         const value = event.target.checked;
         configModel.setRemote(value)
@@ -115,12 +110,10 @@ export default function QueryPage(){
                             </div>
                             <div className="mb-3" style={hostAndPortStyles}>
                                 <label htmlFor="port" className="form-label">Port</label>
-                                <input
+                                <SimpleInput
                                     id="port"
-                                    type="text"
-                                    className="form-control"
-                                    defaultValue={configModel.port}
-                                    onChange={setPort}
+                                    value={configModel.port}
+                                    setValueNumeric={configModel.setPort}
                                     />
                             </div>
                             

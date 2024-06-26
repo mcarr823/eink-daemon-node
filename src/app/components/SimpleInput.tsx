@@ -17,20 +17,33 @@ import { ChangeEventHandler } from "react";
  * 
  * @param id Unique identifier for this element
  * @param value Default value to display. Can be a state variable from useState
- * @param setValue Callback to invoke when an option is selected
+ * @param setValue Callback to invoke when the text changes. Sends back a string
+ * @param setValueNumeric Callback to invoke when the text changes. Sends back a number
  * @returns A styled <input> node
  */
 export default function SimpleInput(args: ISimpleInputArgs){
     
     const setValue: ChangeEventHandler<HTMLInputElement> = (event) => {
-        args.setValue(event.target.value)
+        if (args.setValue){
+            args.setValue(event.target.value)
+        }else if (args.setValueNumeric){
+            const numVal = parseInt(event.target.value)
+            args.setValueNumeric(numVal)
+        }
+    }
+
+    var type: string;
+    if (args.setValueNumeric){
+        type = "number"
+    }else{
+        type = "text"
     }
 
     return (
         <input
             className="form-control"
             id={args.id}
-            type="text"
+            type={type}
             defaultValue={args.value}
             onChange={setValue}
             />
@@ -39,6 +52,7 @@ export default function SimpleInput(args: ISimpleInputArgs){
 
 interface ISimpleInputArgs{
     id: string;
-    value: string;
-    setValue: (value: string) => void;
+    value: string | number;
+    setValue?: (value: string) => void;
+    setValueNumeric?: (value: number) => void;
 }
