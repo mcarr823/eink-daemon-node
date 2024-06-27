@@ -10,16 +10,25 @@ import { INextResponseError } from '@/network/NextResponseError'
 import fs from "node:fs"
 
 var initialConfig = ""
+var configFileExisted = true
 
 // Before any of the tests run, read the current config file.
 beforeAll(() => {
-    initialConfig = fs.readFileSync(configFile).toString()
+    try{
+        initialConfig = fs.readFileSync(configFile).toString()
+    }catch(e){
+        configFileExisted = false
+    }
 })
 
 // Then, after all of the tests have run, restore the config
 // file to its original state.
 afterAll(() => {
-    fs.writeFileSync(configFile, initialConfig)
+    if (configFileExisted){
+        fs.writeFileSync(configFile, initialConfig)
+    }else{
+        fs.unlinkSync(configFile)
+    }
 });
 
 // Test #1
