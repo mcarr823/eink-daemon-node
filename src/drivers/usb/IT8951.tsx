@@ -1,12 +1,13 @@
 import UsbRegisterCommand from "@/classes/UsbRegisterCommand";
-import UsbDriver, { AbstractUsbDriver } from "./AbstractUsbDriver";
+import AbstractUsbDriver from "./AbstractUsbDriver";
 import { BitsPerPixel } from "@/enums/BitsPerPixel";
 import { Uint8, bytesToIntArray, intArrayToBytes, shortToBytes } from "@/classes/IntConverter";
 import Image from "@/classes/Image";
 import IPanelQueryResult from "@/interfaces/IPanelQueryResult";
+import UsbDeviceBuilder from "@/classes/UsbDeviceBuilder";
 
 export default async function IT8951Usb(): Promise<USB_IT8951> {
-    const { endpoint_in, endpoint_out, device } = await UsbDriver({
+    const { endpoint_in, endpoint_out, device } = await UsbDeviceBuilder({
         vendorId: 0x048d,
         productId: 0x8951,
         device_interface_number: 0,
