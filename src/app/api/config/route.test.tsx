@@ -24,14 +24,10 @@ beforeAll(() => {
 // Then, after all of the tests have run, restore the config
 // file to its original state.
 afterAll(() => {
-    try{
-        if (configFileExisted){
-            fs.writeFileSync(configFile, initialConfig)
-        }else{
-            fs.unlinkSync(configFile)
-        }
-    }catch(e){
-        // File write failed - probably an automated test
+    if (configFileExisted){
+        fs.writeFileSync(configFile, initialConfig)
+    }else{
+        fs.unlinkSync(configFile)
     }
 });
 

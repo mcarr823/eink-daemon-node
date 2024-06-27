@@ -1,0 +1,7 @@
+{
+    "panel":"IT8951",
+    "driver":"USB",
+    "remote":false,
+    "host":"",
+    "port":0
+}
