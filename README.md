@@ -1,5 +1,7 @@
 # eink-daemon-node
 
+![example workflow](https://github.com/mcarr823/eink-daemon-node/actions/workflows/jest.yml/badge.svg)
+
 eink-daemon-node is a tool for testing Waveshare e-ink panels.
 
 Its goal is to facilitate the following:
